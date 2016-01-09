@@ -1,4 +1,6 @@
 library(plyr)
+library(Hmisc)
+library(timeDate)
 #Loading and preprocessing the data
 datos=read.csv("activity.csv",header=T)
 head(datos)
@@ -11,15 +13,13 @@ hist(NAtotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",
 #3.
 meansteps=ddply(datos,~date,summarise,mean=mean(steps),median=median(steps))
 NAmeansteps=na.omit(meansteps)
-NAmeansteps
+summary(NAmeansteps$mean)
 # average daily activity pattern
 #1.
-DateF=as.character(NAtotalsteps$date)
-DateF=strptime(DateF,"%Y-%m-%d")
-plot(DateF,NAtotalsteps$steps,type="l" ,main="Time Series\nMean of steps")
-#2.
 NAdatos=na.omit(datos)
 meaninterval=ddply(NAdatos,~interval,summarise,mean=mean(steps))
+plot(meaninterval$interval,meaninterval$mean,type="l" ,main="Time Series\nMean of steps")
+#2.
 meaninterval
 maxcol=which.max(meaninterval$mean)
 meaninterval[maxcol,]
@@ -28,18 +28,30 @@ meaninterval[maxcol,]
 NAs=sum(is.na(datos))
 NAs
 #2. , 3.
-#impute.mean <- function(x) replace(x, is.na(x), mean(x, na.rm = TRUE))
-#sinna=ddply(datos, ~ date, transform, steps = impute.mean(steps))
-#datos$steps[is.na(datos$steps)] <- ave(datos$steps, datos$date, 
-#                               FUN = function(z) 
-#                                 mean(z, na.rm = TRUE))[c(which(is.na(datos$steps)))]
-sinna=datos
-sinna$steps[is.na(sinna$steps)] =0
+
+sinna=ddply(datos,"interval",mutate,imputed=impute(steps,mean))
+
 
 #4.
 sinnatotalsteps=ddply(sinna,~date,summarise,steps=sum(steps))
 hist(sinnatotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
 sinnameansteps=ddply(sinna,~date,summarise,mean=mean(steps))
-sinnameansteps
+summary(sinnameansteps$mean)
+summary(sinna$steps)
 
-
+par(mfrow=c(1,2))
+hist(NAtotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
+hist(sinnatotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
+par(mfrow=c(1,1))
+#differences in activity patterns between weekdays and weekends
+#1.
+d=strptime(datos$date,"%Y-%m-%d")
+datos <- mutate(datos,habil=factor(isWeekday(d),labels=c("weekend","weekday")))
+#2.
+week=subset(datos,habil=="weekday")
+meanweek=ddply(week,~interval,summarise,mean=mean(na.omit(steps)))
+weekend=subset(datos,habil=="weekend")
+meanweekend=ddply(weekend,~interval,summarise,mean=mean(na.omit(steps)))
+plot(meanweek,type="l" ,col="red",main="Time Series\nMean of steps")
+lines(meanweekend,col="blue")
+legend("topright",legend=c("week","weekend"),cex=0.7,fill=c("red","blue"))
