@@ -1,27 +1,26 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
+title: 'Reproducible Research: Peer Assessment 1'
+output:
   html_document:
-    keep_md: true
+    keep_md: yes
+  pdf_document: default
 ---
 
 
 ## Loading and preprocessing the data
 
-```{r eval=TRUE, echo = TRUE}
+```{r echo = TRUE}
+library(plyr)
+library(Hmisc)
+library(timeDate)
 datos=read.csv("activity.csv",header=T)
-head(datos)
 ```
 ## What is mean total number of steps taken per day?
 The NA values are ignored in this section. The next figure is a histogram with the total number of steps taken daily. 
-```{reval=TRUE, echo = TRUE}
+```{r echo = TRUE}
 totalsteps=ddply(datos,~date,summarise,steps=sum(steps))
 NAtotalsteps=na.omit(totalsteps)
 hist(NAtotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
-```
-
-Next, the mean of total steps taken per day is shown
-```{r eval=TRUE, echo = TRUE}
 meansteps=ddply(NAtotalsteps,~date,summarise,mean=mean(steps),median=median(steps))
 summary(meansteps$mean)
 ```
@@ -29,7 +28,7 @@ summary(meansteps$mean)
 
 ## What is the average daily activity pattern?
 The NA values are ignored in this section.Here a graph is produced of the mean of steps taking per interval
-```{r eval=TRUE, echo = TRUE}
+```{r echo = TRUE}
 NAdatos=na.omit(datos)
 meaninterval=ddply(NAdatos,~interval,summarise,mean=mean(steps))
 plot(meaninterval$interval,meaninterval$mean,type="l" ,main="Time Series\n Mean of steps",xlab="Interval",ylab="Steps")
@@ -37,7 +36,7 @@ plot(meaninterval$interval,meaninterval$mean,type="l" ,main="Time Series\n Mean 
 
 Next, the five minute iterval with the maximum number of steps is shown 
 
-```{r eval=TRUE, echo = TRUE}
+```{r echo = TRUE}
 maxcol=which.max(meaninterval$mean)
 meaninterval[maxcol,]
 ```
@@ -45,36 +44,36 @@ meaninterval[maxcol,]
 ## Imputing missing values
 This section shows the number of NAs that the table has. 
 
-```{r eval=TRUE, echo = TRUE}
+```{r echo = TRUE}
 NAs=sum(is.na(datos))
 NAs
 ```
 
 the mean of 5minutes intervals is imputed to the NAs.
 
-```{r eval=TRUE, echo = TRUE}
+```{r echo = TRUE}
 sinna=ddply(datos,"interval",mutate,imputed=impute(steps,mean))
 ```
 
 histogram with the total number of steps taken daily including the imputed values
 
-```{r eval=TRUE, echo = TRUE}
+```{r echo = TRUE}
 sinnatotalsteps=ddply(sinna,~date,summarise,steps=sum(steps))
 hist(sinnatotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
 ```
 
 the mean of total steps taken per day is shown
 
-```{r eval=TRUE, echo = TRUE}
-sinnameansteps=ddply(sinna,~date,summarise,mean=mean(steps))
+```{r echo = TRUE}
+sinnameansteps=ddply(sinnatotalsteps,~date,summarise,mean=mean(steps))
 summary(sinnameansteps$mean)
-summary(sinna$steps)
 ```
 
 Graphs, comparing the original and the imputed tables
 
-```{r eval=TRUE, echo = TRUE}
-
+```{r echo = TRUE}
+totalsteps=ddply(datos,~date,summarise,steps=sum(steps))
+NAtotalsteps=na.omit(totalsteps)
 par(mfrow=c(1,2))
 hist(NAtotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
 hist(sinnatotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
@@ -83,7 +82,7 @@ par(mfrow=c(1,1))
 
 ## Are there differences in activity patterns between weekdays and weekends?
 Graph ilustrating the difference between the number of steps taken in the week and in the weekend
-```{r eval=TRUE, echo = TRUE}
+```{r echo = TRUE}
 d=strptime(datos$date,"%Y-%m-%d")
 datos <- mutate(datos,habil=factor(isWeekday(d),labels=c("weekend","weekday")))
 week=subset(datos,habil=="weekday")
