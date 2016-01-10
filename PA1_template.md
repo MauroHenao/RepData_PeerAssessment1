@@ -70,7 +70,7 @@ NAtotalsteps=na.omit(totalsteps)
 hist(NAtotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)\
+<img src="PA1_template_files/figure-html/unnamed-chunk-2-1.png" title="" alt="" width="480px" height="480px" />
 
 ```r
 meansteps=ddply(NAtotalsteps,~date,summarise,mean=mean(steps),median=median(steps))
