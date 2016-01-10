@@ -28,7 +28,7 @@ summary(meansteps$mean)
 
 ## What is the average daily activity pattern?
 The NA values are ignored in this section.Here a graph is produced of the mean of steps taking per interval
-```{r echo = TRUE}
+```{r echo = TRUE, out.width = '480px', out.height = '480px'}
 NAdatos=na.omit(datos)
 meaninterval=ddply(NAdatos,~interval,summarise,mean=mean(steps))
 plot(meaninterval$interval,meaninterval$mean,type="l" ,main="Time Series\n Mean of steps",xlab="Interval",ylab="Steps")
@@ -57,21 +57,21 @@ sinna=ddply(datos,"interval",mutate,imputed=impute(steps,mean))
 
 histogram with the total number of steps taken daily including the imputed values
 
-```{r echo = TRUE}
+```{r echo = TRUE, out.width = '480px', out.height = '480px'}
 sinnatotalsteps=ddply(sinna,~date,summarise,steps=sum(steps))
 hist(sinnatotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
 ```
 
 the mean of total steps taken per day is shown
 
-```{r echo = TRUE}
+```{r echo = TRUE, out.width = '480px', out.height = '480px'}
 sinnameansteps=ddply(sinnatotalsteps,~date,summarise,mean=mean(steps))
 summary(sinnameansteps$mean)
 ```
 
 Graphs, comparing the original and the imputed tables
 
-```{r echo = TRUE}
+```{r echo = TRUE, out.width = '480px', out.height = '480px'}
 totalsteps=ddply(datos,~date,summarise,steps=sum(steps))
 NAtotalsteps=na.omit(totalsteps)
 par(mfrow=c(1,2))
@@ -82,7 +82,7 @@ par(mfrow=c(1,1))
 
 ## Are there differences in activity patterns between weekdays and weekends?
 Graph ilustrating the difference between the number of steps taken in the week and in the weekend
-```{r echo = TRUE}
+```{r echo = TRUE, out.width = '480px', out.height = '480px'}
 d=strptime(datos$date,"%Y-%m-%d")
 datos <- mutate(datos,habil=factor(isWeekday(d),labels=c("weekend","weekday")))
 week=subset(datos,habil=="weekday")

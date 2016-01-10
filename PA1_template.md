@@ -92,7 +92,7 @@ meaninterval=ddply(NAdatos,~interval,summarise,mean=mean(steps))
 plot(meaninterval$interval,meaninterval$mean,type="l" ,main="Time Series\n Mean of steps",xlab="Interval",ylab="Steps")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)\
+<img src="PA1_template_files/figure-html/unnamed-chunk-3-1.png" title="" alt="" width="480px" height="480px" />
 
 Next, the five minute iterval with the maximum number of steps is shown 
 
@@ -135,7 +135,7 @@ sinnatotalsteps=ddply(sinna,~date,summarise,steps=sum(steps))
 hist(sinnatotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-7-1.png)\
+<img src="PA1_template_files/figure-html/unnamed-chunk-7-1.png" title="" alt="" width="480px" height="480px" />
 
 the mean of total steps taken per day is shown
 
@@ -161,7 +161,7 @@ hist(NAtotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",
 hist(sinnatotalsteps$steps,main="Histogram \n Total of steps per day",xlab="steps",col = "lightgray")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png)\
+<img src="PA1_template_files/figure-html/unnamed-chunk-9-1.png" title="" alt="" width="480px" height="480px" />
 
 ```r
 par(mfrow=c(1,1))
@@ -182,5 +182,5 @@ lines(meanweekend,col="blue")
 legend("topright",legend=c("week","weekend"),cex=0.7,fill=c("red","blue"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)\
+<img src="PA1_template_files/figure-html/unnamed-chunk-10-1.png" title="" alt="" width="480px" height="480px" />
 
